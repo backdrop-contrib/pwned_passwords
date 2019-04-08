@@ -101,7 +101,7 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#default_value' => variable_get('password_haveibeenpwned_failed_check_default', PASSWORD_HAVEIBEENPWNED_FAILED_CHECK_DEFAULT)
   );
 
-  return $form;
+  return system_settings_form($form);
 }
 
 /**
