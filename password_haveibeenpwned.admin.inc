@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Admin UI for password_haveibeenpwned.
@@ -15,9 +16,10 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     PASSWORD_HAVEIBEENPWNED_WARN   => t('Warn'),
     PASSWORD_HAVEIBEENPWNED_BLOCK  => t('Block'),
   );
-  $hibp_api = array('!hibp_api' => l(
+  $hibp_api = array(
+    '!hibp_api' => l(
     t('HIBP API'),
-    'https://haveibeenpwned.com/API/v2#PwnedPasswords')
+    'https://haveibeenpwned.com/API/v2#PwnedPasswords'),
   );
 
   $form['policy_wrapper'] = array(
@@ -33,21 +35,21 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#title'   => t('Login policy'),
     '#description' => 'A compromised password is provided at login. (Default: Warn)',
     '#options' => $options,
-    '#default_value' => variable_get('password_haveibeenpwned_login_policy', PASSWORD_HAVEIBEENPWNED_WARN)
+    '#default_value' => variable_get('password_haveibeenpwned_login_policy', PASSWORD_HAVEIBEENPWNED_WARN),
   );
   $form['policy_wrapper']['password_haveibeenpwned_change_policy'] = array(
     '#type'    => 'radios',
     '#title'   => t('Password change policy'),
     '#description' => 'A compromised password is provided when the user changes their password. (Default: Block)',
     '#options' => $options,
-    '#default_value' => variable_get('password_haveibeenpwned_change_policy', PASSWORD_HAVEIBEENPWNED_BLOCK)
+    '#default_value' => variable_get('password_haveibeenpwned_change_policy', PASSWORD_HAVEIBEENPWNED_BLOCK),
   );
   $form['policy_wrapper']['password_haveibeenpwned_register_policy'] = array(
     '#type'    => 'radios',
     '#title'   => t('Registration policy'),
     '#description' => 'A compromised password is provided when the user registers. (Default: Block)',
     '#options' => $options,
-    '#default_value' => variable_get('password_haveibeenpwned_register_policy', PASSWORD_HAVEIBEENPWNED_BLOCK)
+    '#default_value' => variable_get('password_haveibeenpwned_register_policy', PASSWORD_HAVEIBEENPWNED_BLOCK),
   );
 
   $messages_token_help = t('Available variables are: [password_haveibeenpwned:hibp_link], [password_haveibeenpwned:password_reset].');
@@ -86,7 +88,7 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
   $form['user_messages']['password_haveibeenpwned_message_change_blocked'] = array(
     '#type' => 'textarea',
     '#title' => t('Password change blocked'),
-    '#default_value' => _password_haveibeenpwned_message_text('change_blocked',FALSE),
+    '#default_value' => _password_haveibeenpwned_message_text('change_blocked', FALSE),
     '#rows' => 3,
   );
 
@@ -101,12 +103,12 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#type'          => 'textfield',
     '#title'         => t('Threshold'),
     '#description'   => t('Passwords with a count above this threshold will be treated as compromised.'),
-    '#default_value' => variable_get('password_haveibeenpwned_password_threshold', PASSWORD_HAVEIBEENPWNED_DEFAULT_PASSWORD_THRESHOLD)
+    '#default_value' => variable_get('password_haveibeenpwned_password_threshold', PASSWORD_HAVEIBEENPWNED_DEFAULT_PASSWORD_THRESHOLD),
   );
   $form['password_threshold']['examples'] = array(
     '#type'          => 'item',
     '#title'         => 'Examples',
-    '#markup'        => password_haveibeenpwned_password_threshold_examples()
+    '#markup'        => password_haveibeenpwned_password_threshold_examples(),
   );
 
   $form['api_settings'] = array(
@@ -120,25 +122,25 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#type'          => 'textfield',
     '#title'         => t('HIBP API URL'),
     '#description'   => t('URL the module sends API calls to.'),
-    '#default_value' => variable_get('password_haveibeenpwned_api_url', PASSWORD_HAVEIBEENPWNED_DEFAULT_API_URL)
+    '#default_value' => variable_get('password_haveibeenpwned_api_url', PASSWORD_HAVEIBEENPWNED_DEFAULT_API_URL),
   );
   $form['api_settings']['password_haveibeenpwned_ua'] = array(
     '#type'          => 'textfield',
     '#title'         => t('User Agent'),
     '#description'   => t('The UA the module sends to the HIBP API.'),
-    '#default_value' => variable_get('password_haveibeenpwned_ua', PASSWORD_HAVEIBEENPWNED_DEFAULT_UA)
+    '#default_value' => variable_get('password_haveibeenpwned_ua', PASSWORD_HAVEIBEENPWNED_DEFAULT_UA),
   );
   $form['api_settings']['password_haveibeenpwned_timeout'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Timeout'),
     '#description'   => t('The timeout setting (in seconds) for API calls.'),
-    '#default_value' => variable_get('password_haveibeenpwned_timeout', PASSWORD_HAVEIBEENPWNED_DEFAULT_TIMEOUT)
+    '#default_value' => variable_get('password_haveibeenpwned_timeout', PASSWORD_HAVEIBEENPWNED_DEFAULT_TIMEOUT),
   );
   $form['api_settings']['password_haveibeenpwned_failed_check_default'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Assume password is bad if check fails'),
     '#description'   => 'If a call to the HIBP API fails, should the module treat the password as if it is compromised? (Default: no)',
-    '#default_value' => variable_get('password_haveibeenpwned_failed_check_default', PASSWORD_HAVEIBEENPWNED_FAILED_CHECK_DEFAULT)
+    '#default_value' => variable_get('password_haveibeenpwned_failed_check_default', PASSWORD_HAVEIBEENPWNED_FAILED_CHECK_DEFAULT),
   );
 
   return system_settings_form($form);
@@ -148,6 +150,7 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
  * Provide some example passwords and their HIBP counts.
  *
  * @return string
+ *   A themed list of example passwords with HIBP counts.
  */
 function password_haveibeenpwned_password_threshold_examples() {
   if ($cache = cache_get(__FUNCTION__)) {
@@ -175,8 +178,15 @@ function password_haveibeenpwned_password_threshold_examples() {
   }
 
   $items = array();
-  foreach($list as $password => $count) {
+  foreach ($list as $password => $count) {
     $items[] = 'Password: "' . $password . '", count: ' . number_format($count);
   }
-  return theme_item_list(array('items' => $items, 'title' => '', 'type' => 'ul', 'attributes' => array()));
+  return theme_item_list(
+    array(
+      'items' => $items,
+      'title' => '',
+      'type' => 'ul',
+      'attributes' => array(),
+    )
+  );
 }
