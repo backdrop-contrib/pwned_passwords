@@ -50,12 +50,52 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#default_value' => variable_get('password_haveibeenpwned_register_policy', PASSWORD_HAVEIBEENPWNED_BLOCK)
   );
 
+  $messages_token_help = t('Available variables are: [password_haveibeenpwned:hibp_link], [password_haveibeenpwned:password_reset].');
+
+  $form['user_messages'] = array(
+    '#type'        => 'fieldset',
+    '#title'       => t('User Messages'),
+    '#description' => t('Messages displayed to users when compromised passwords are detected.') . '<br />' . $messages_token_help,
+    '#collapsible' => TRUE,
+    '#collapsed'   => TRUE,
+  );
+  $form['user_messages']['password_haveibeenpwned_message_warning'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Warning'),
+    '#default_value' => _password_haveibeenpwned_message_text('warning', FALSE),
+    '#rows' => 3,
+  );
+  $form['user_messages']['password_haveibeenpwned_message_login_warning'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Login warning'),
+    '#default_value' => _password_haveibeenpwned_message_text('login_warning', FALSE),
+    '#rows' => 3,
+  );
+  $form['user_messages']['password_haveibeenpwned_message_login_blocked'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Login blocked'),
+    '#default_value' => _password_haveibeenpwned_message_text('login_blocked', FALSE),
+    '#rows' => 3,
+  );
+  $form['user_messages']['password_haveibeenpwned_message_register_blocked'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Registration blocked'),
+    '#default_value' => _password_haveibeenpwned_message_text('register_blocked', FALSE),
+    '#rows' => 3,
+  );
+  $form['user_messages']['password_haveibeenpwned_message_change_blocked'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Password change blocked'),
+    '#default_value' => _password_haveibeenpwned_message_text('change_blocked',FALSE),
+    '#rows' => 3,
+  );
+
   $form['password_threshold'] = array(
     '#type'        => 'fieldset',
     '#title'       => t('Password threshold'),
     '#description' => t('The !hibp_api responds with a count of how many times a given password appears in the HIBP database. Higher counts indicate more commonly used (/ breached) passwords.', $hibp_api),
     '#collapsible' => TRUE,
-    '#collapsed'   => FALSE,
+    '#collapsed'   => TRUE,
   );
   $form['password_threshold']['password_haveibeenpwned_password_threshold'] = array(
     '#type'          => 'textfield',
