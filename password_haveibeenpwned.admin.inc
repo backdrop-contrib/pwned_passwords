@@ -37,6 +37,12 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#options' => $options,
     '#default_value' => variable_get('password_haveibeenpwned_login_policy', PASSWORD_HAVEIBEENPWNED_WARN),
   );
+  $form['policy_wrapper']['password_haveibeenpwned_check_failed_login'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Check failed login attempts?'),
+    '#description' => t('Should the password be checked when the login attempt fails? (Default: no)'),
+    '#default_value' => variable_get('password_haveibeenpwned_check_failed_login', PASSWORD_HAVEIBEENPWNED_CHECK_FAILED_LOGIN),
+  ];
   $form['policy_wrapper']['password_haveibeenpwned_change_policy'] = array(
     '#type'    => 'radios',
     '#title'   => t('Password change policy'),
