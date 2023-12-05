@@ -174,6 +174,10 @@ function password_haveibeenpwned_password_threshold_examples() {
       'admin',
       'drupal',
       'correcthorsebatterystaple',
+      'phprules',
+      'joomla12345',
+      '1wordpress',
+      'ohnoes!!',
     );
     $list = array();
     foreach ($passwords as $password) {
