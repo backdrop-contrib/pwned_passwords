@@ -19,7 +19,12 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
   $hibp_api = array(
     '!hibp_api' => l(
     t('HIBP API'),
-    'https://haveibeenpwned.com/API/v2#PwnedPasswords'),
+    'https://haveibeenpwned.com/API/v3#PwnedPasswords'),
+  );
+  $hibp_padding = array(
+    '!hibp_padding' => l(
+      t('HIBP documentation on padding'),
+      'https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding/'),
   );
 
   $form['policy_wrapper'] = array(
@@ -145,8 +150,14 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
   $form['api_settings']['password_haveibeenpwned_failed_check_default'] = array(
     '#type'          => 'checkbox',
     '#title'         => t('Assume password is bad if check fails'),
-    '#description'   => 'If a call to the HIBP API fails, should the module treat the password as if it is compromised? (Default: no)',
+    '#description'   => t('If a call to the HIBP API fails, should the module treat the password as if it is compromised? (Default: no)'),
     '#default_value' => variable_get('password_haveibeenpwned_failed_check_default', PASSWORD_HAVEIBEENPWNED_FAILED_CHECK_DEFAULT),
+  );
+  $form['api_settings']['password_haveibeenpwned_add_padding'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Ask HIBP API to Add Padding'),
+    '#description'   => t('See: !hibp_padding (Default: yes)', $hibp_padding),
+    '#default_value' => variable_get('password_haveibeenpwned_add_padding', PASSWORD_HAVEIBEENPWNED_PADDING_DEFAULT),
   );
 
   return system_settings_form($form);
