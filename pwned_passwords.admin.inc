@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Admin UI for password_haveibeenpwned.
+ * Admin UI for pwned_passwords.
  */
 
 /**
- * Admin settings form for Password Have I Been Pwned?
+ * Admin settings form for pwned_passwords
  */
-function password_haveibeenpwned_admin_settings($form, &$form_state) {
-  $config = config('password_haveibeenpwned.settings');
+function pwned_passwords_admin_settings($form, &$form_state) {
+  $config = config('pwned_passwords.settings');
   $form = array();
-  $form['#config'] = 'password_haveibeenpwned.settings';
+  $form['#config'] = 'pwned_passwords.settings';
 
   $options = array(
-    PASSWORD_HAVEIBEENPWNED_IGNORE => t('Ignore'),
-    PASSWORD_HAVEIBEENPWNED_WARN => t('Warn'),
-    PASSWORD_HAVEIBEENPWNED_BLOCK => t('Block'),
+    pwned_passwords_IGNORE => t('Ignore'),
+    pwned_passwords_WARN => t('Warn'),
+    pwned_passwords_BLOCK => t('Block'),
   );
   $hibp_api = array(
     '!hibp_api' => l(
@@ -37,35 +37,35 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#collapsed' => FALSE,
   );
 
-  $form['policy_wrapper']['password_haveibeenpwned_login_policy'] = array(
+  $form['policy_wrapper']['pwned_passwords_login_policy'] = array(
     '#type' => 'radios',
     '#title' => t('Login policy'),
     '#description' => 'A compromised password is provided at login. (Default: Warn)',
     '#options' => $options,
-    '#default_value' => $config->get('password_haveibeenpwned_login_policy'),
+    '#default_value' => $config->get('pwned_passwords_login_policy'),
   );
-  $form['policy_wrapper']['password_haveibeenpwned_check_failed_login'] = [
+  $form['policy_wrapper']['pwned_passwords_check_failed_login'] = [
     '#type' => 'checkbox',
     '#title' => t('Check failed login attempts?'),
     '#description' => t('Should the password be checked when the login attempt fails? (Default: no)'),
-    '#default_value' => $config->get('password_haveibeenpwned_check_failed_login'),
+    '#default_value' => $config->get('pwned_passwords_check_failed_login'),
   ];
-  $form['policy_wrapper']['password_haveibeenpwned_change_policy'] = array(
+  $form['policy_wrapper']['pwned_passwords_change_policy'] = array(
     '#type' => 'radios',
     '#title' => t('Password change policy'),
     '#description' => 'A compromised password is provided when the user changes their password. (Default: Block)',
     '#options' => $options,
-    '#default_value' => $config->get('password_haveibeenpwned_change_policy'),
+    '#default_value' => $config->get('pwned_passwords_change_policy'),
   );
-  $form['policy_wrapper']['password_haveibeenpwned_register_policy'] = array(
+  $form['policy_wrapper']['pwned_passwords_register_policy'] = array(
     '#type' => 'radios',
     '#title' => t('Registration policy'),
     '#description' => 'A compromised password is provided when the user registers. (Default: Block)',
     '#options' => $options,
-    '#default_value' => $config->get('password_haveibeenpwned_register_policy'),
+    '#default_value' => $config->get('pwned_passwords_register_policy'),
   );
 
-  $messages_token_help = t('Available variables are: [password_haveibeenpwned:hibp_link], [password_haveibeenpwned:password_reset].');
+  $messages_token_help = t('Available variables are: [pwned_passwords:hibp_link], [pwned_passwords:password_reset].');
 
   $form['user_messages'] = array(
     '#type' => 'fieldset',
@@ -74,34 +74,34 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
-  $form['user_messages']['password_haveibeenpwned_message_warning'] = array(
+  $form['user_messages']['pwned_passwords_message_warning'] = array(
     '#type' => 'textarea',
     '#title' => t('Warning'),
-    '#default_value' => _password_haveibeenpwned_message_text('warning', FALSE),
+    '#default_value' => _pwned_passwords_message_text('warning', FALSE),
     '#rows' => 3,
   );
-  $form['user_messages']['password_haveibeenpwned_message_login_warning'] = array(
+  $form['user_messages']['pwned_passwords_message_login_warning'] = array(
     '#type' => 'textarea',
     '#title' => t('Login warning'),
-    '#default_value' => _password_haveibeenpwned_message_text('login_warning', FALSE),
+    '#default_value' => _pwned_passwords_message_text('login_warning', FALSE),
     '#rows' => 3,
   );
-  $form['user_messages']['password_haveibeenpwned_message_login_blocked'] = array(
+  $form['user_messages']['pwned_passwords_message_login_blocked'] = array(
     '#type' => 'textarea',
     '#title' => t('Login blocked'),
-    '#default_value' => _password_haveibeenpwned_message_text('login_blocked', FALSE),
+    '#default_value' => _pwned_passwords_message_text('login_blocked', FALSE),
     '#rows' => 3,
   );
-  $form['user_messages']['password_haveibeenpwned_message_register_blocked'] = array(
+  $form['user_messages']['pwned_passwords_message_register_blocked'] = array(
     '#type' => 'textarea',
     '#title' => t('Registration blocked'),
-    '#default_value' => _password_haveibeenpwned_message_text('register_blocked', FALSE),
+    '#default_value' => _pwned_passwords_message_text('register_blocked', FALSE),
     '#rows' => 3,
   );
-  $form['user_messages']['password_haveibeenpwned_message_change_blocked'] = array(
+  $form['user_messages']['pwned_passwords_message_change_blocked'] = array(
     '#type' => 'textarea',
     '#title' => t('Password change blocked'),
-    '#default_value' => _password_haveibeenpwned_message_text('change_blocked', FALSE),
+    '#default_value' => _pwned_passwords_message_text('change_blocked', FALSE),
     '#rows' => 3,
   );
 
@@ -112,16 +112,16 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
-  $form['password_threshold']['password_haveibeenpwned_password_threshold'] = array(
+  $form['password_threshold']['pwned_passwords_password_threshold'] = array(
     '#type' => 'textfield',
     '#title' => t('Threshold'),
     '#description' => t('Passwords with a count above this threshold will be treated as compromised.'),
-    '#default_value' => $config->get('password_haveibeenpwned_password_threshold'),
+    '#default_value' => $config->get('pwned_passwords_password_threshold'),
   );
   $form['password_threshold']['examples'] = array(
     '#type' => 'item',
     '#title' => 'Examples',
-    '#markup' => password_haveibeenpwned_password_threshold_examples(),
+    '#markup' => pwned_passwords_password_threshold_examples(),
   );
 
   $form['api_settings'] = array(
@@ -131,35 +131,35 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
-  $form['api_settings']['password_haveibeenpwned_api_url'] = array(
+  $form['api_settings']['pwned_passwords_api_url'] = array(
     '#type' => 'textfield',
     '#title' => t('HIBP API URL'),
     '#description' => t('URL the module sends API calls to.'),
-    '#default_value' => $config->get('password_haveibeenpwned_api_url'),
+    '#default_value' => $config->get('pwned_passwords_api_url'),
   );
-  $form['api_settings']['password_haveibeenpwned_ua'] = array(
+  $form['api_settings']['pwned_passwords_ua'] = array(
     '#type' => 'textfield',
     '#title' => t('User Agent'),
     '#description' => t('The UA the module sends to the HIBP API.'),
-    '#default_value' => $config->get('password_haveibeenpwned_ua'),
+    '#default_value' => $config->get('pwned_passwords_ua'),
   );
-  $form['api_settings']['password_haveibeenpwned_timeout'] = array(
+  $form['api_settings']['pwned_passwords_timeout'] = array(
     '#type' => 'textfield',
     '#title' => t('Timeout'),
     '#description' => t('The timeout setting (in seconds) for API calls.'),
-    '#default_value' => $config->get('password_haveibeenpwned_timeout'),
+    '#default_value' => $config->get('pwned_passwords_timeout'),
   );
-  $form['api_settings']['password_haveibeenpwned_failed_check_default'] = array(
+  $form['api_settings']['pwned_passwords_failed_check_default'] = array(
     '#type' => 'checkbox',
     '#title' => t('Assume password is bad if check fails'),
     '#description' => t('If a call to the HIBP API fails, should the module treat the password as if it is compromised? (Default: no)'),
-    '#default_value' => $config->get('password_haveibeenpwned_failed_check_default'),
+    '#default_value' => $config->get('pwned_passwords_failed_check_default'),
   );
-  $form['api_settings']['password_haveibeenpwned_add_padding'] = array(
+  $form['api_settings']['pwned_passwords_add_padding'] = array(
     '#type' => 'checkbox',
     '#title' => t('Ask HIBP API to Add Padding'),
     '#description' => t('See: !hibp_padding (Default: yes)', $hibp_padding),
-    '#default_value' => $config->get('password_haveibeenpwned_add_padding'),
+    '#default_value' => $config->get('pwned_passwords_add_padding'),
   );
 
   return system_settings_form($form);
@@ -171,7 +171,7 @@ function password_haveibeenpwned_admin_settings($form, &$form_state) {
  * @return string
  *   A themed list of example passwords with HIBP counts.
  */
-function password_haveibeenpwned_password_threshold_examples() {
+function pwned_passwords_password_threshold_examples() {
   if ($cache = cache_get(__FUNCTION__)) {
     $list = $cache->data;
   }
@@ -194,7 +194,7 @@ function password_haveibeenpwned_password_threshold_examples() {
     );
     $list = array();
     foreach ($passwords as $password) {
-      $list[$password] = (int) password_haveibeenpwned_check_password($password, TRUE);
+      $list[$password] = (int) pwned_passwords_check_password($password, TRUE);
     }
     arsort($list);
     cache_set(__FUNCTION__, $list, 'cache', CACHE_TEMPORARY);
