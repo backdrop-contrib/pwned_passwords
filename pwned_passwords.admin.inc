@@ -29,10 +29,20 @@ function pwned_passwords_admin_settings($form, &$form_state) {
       'https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding/'),
   );
 
+  $hibp_passwords_link = array(
+    '!hibp_passwords_link' => l(
+    t('HIBP Passwords'),
+    'https://haveibeenpwned.com/Passwords'),
+  );
+
+  $form['top'] = array(
+    '#markup' => t('Settings for checking passwords with !hibp_passwords_link database.', $hibp_passwords_link),
+  );
+
   $form['policy_wrapper'] = array(
     '#type' => 'fieldset',
     '#title' => t('Policies'),
-    '#description' => t('These policies determine the action the Password Have I Been Pwned? module should take when it detects a password which has been compromised in a breach.'),
+    '#description' => t('These policies determine the action the module should take when it detects a password that has been compromised in a breach.'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
@@ -120,7 +130,7 @@ function pwned_passwords_admin_settings($form, &$form_state) {
   );
   $form['password_threshold']['examples'] = array(
     '#type' => 'item',
-    '#title' => 'Examples',
+    '#title' => t('Examples with count'),
     '#markup' => pwned_passwords_password_threshold_examples(),
   );
 
@@ -191,6 +201,7 @@ function pwned_passwords_password_threshold_examples() {
       'joomla12345',
       '1wordpress',
       'ohnoes!!',
+      'hfuwe3ty49yfHH**',
     );
     $list = array();
     foreach ($passwords as $password) {
@@ -210,6 +221,8 @@ function pwned_passwords_password_threshold_examples() {
     'title' => '',
     'type' => 'ul',
     'attributes' => array(),
-  )
+    'wrapper_attributes' => array(),
+    'empty' => 'No items to display.'
+    )
   );
 }
