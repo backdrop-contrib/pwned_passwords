@@ -1,50 +1,82 @@
 # Pwned passwords
 
+
+**WARNING: The module is currently being ported and may change.**
+
+**Please test on a staging server before deploying to production.**
+
 Have I Been Pwned?
 
-This is a Backdrop port of the Drupal 7 password_haveibeenpwned module
-from the Drupal 7.x-2.1 release. The name has been changed to pwned_passwords
-the name used for the Drupal 8/9 module for brevity and readability.
+Although, this module is a port of the Drupal 7 [password_haveibeenpwned](https://www.drupal.org/project/password_haveibeenpwned)
+module it uses the name of the Drupal 8/9/10 module [pwned_passwords](https://www.drupal.org/project/pwned_passwords)
+because the name is shorter and makes the code easier to read and with hope to
+preserve future feature parity.
 
-This module adds additional checks/validation for user passwords against the
-Have I Been Pwned - Pwned Passwords API ( https://haveibeenpwned.com/Passwords )
+The module provides additional checks/validation for user passwords with Troy
+Hunt's excellent service [Have I Been Pwned](https://haveibeenpwned.com/) for
+email addresses and [Have I Been Pwned Passwords](https://haveibeenpwned.com/Passwords) for passwords.
+For further background see [Wikipedia HIBP](https://en.wikipedia.org/wiki/Have_I_Been_Pwned).
 
-This port attempts to preserve behavior from the D7 module while adapting
-hook signatures and APIs for Backdrop and uses backdrop_http_request() if
-available, otherwise falls back to cURL.
+Specifically, the module uses the [HIBP Pwned Passwords V3 API](https://haveibeenpwned.com/API/v3#PwnedPasswords)
+to check passwords with only the first five characters of the hash over https.
 
-This module checks user passwords using Troy Hunt's excellent Have I Been Pwned
-(HIBP) service.
+This port attempts to preserve behavior from the Drupal 7 module while adapting
+hook signatures and APIs for Backdrop and uses *backdrop_http_request()* if
+available, otherwise falls back to cURL **(not currently implemented)**.
 
-Specifically, it uses the Pwned Passwords V3 API which means that only the first
-five characters of the hash of each password is checked using the HIBP API
-(over https).
+The module provides configurable options for *user login*, *registration*, and
+*password change* to: block, warn, or ignore the use of compromised ("pwned")
+passwords
 
-The module has configurable options for login, registration, and password change.
-Options can block the use of compromised ("pwned") passwords, emit a warning,
-or do nothing (ignore). By default pwned passwords are blocked at login,
-registration or password change.
+By default pwned passwords are set to warn on *user login* and blocked on
+*registration* or *password change*. These are the same defaults used by the
+Drupal 7 module.
 
 There is also a configurable threshold based on the count for each pwned
 password returned by the API; higher counts indicate more commonly breached
 passwords.
 
-** Please test on a staging server before deploying to production.
 
-Requirements:
--------------
-- PHP 7.4 (Not tested with lower versions)
-- Backdrop 1.x
+## Requirements
 - It is not necessary to register for an API at the HIBP website.
+- PHP 7.4 or above (Not tested with lower versions).
 
-Instructions:
--------------
-- Install and enable the module.
-- Check the Configuration page to setup.
 
-Credits:
---------
-- Thanks to [Koen Verheyen](https://www.drupal.org/u/koen-verheyen) for the
-  original implementation.
-- Created for Drupal 7 by [mcdruid](https://www.drupal.org/u/mcdruid)
-- Ported to Backdrop by [izmeez](https://github.com/izmeez/)
+## Installation
+- Install this module using the official Backdrop CMS instructions at
+  https://docs.backdropcms.org/documentation/extend-with-modules.
+
+- Visit the configuration page under Administration > Configuration >
+User accounts > Pwned Passwords (admin/config/people/pwned_passwords) and enter
+the required information.
+
+
+## Documentation
+Additional documentation is located in the Wiki:
+https://github.com/backdrop-contrib/pwned_passwords/wiki/Documentation.
+
+
+## Issues
+Bugs and Feature Requests should be reported in the Issue Queue:
+https://github.com/backdrop-contrib/pwned_passwords/issues.
+
+
+## Current Maintainers
+- [izmeez](https://github.com/izmeez)
+- Seeking additional maintainers
+
+
+## Credits
+- Thanks to [Koen Verheyen](https://github.com/verheyenkoen) for the original implementation.
+- Created for Drupal 7 by [mcdruid](https://github.com/mcdruid)
+- Ported to Backdrop CMS by [izmeez](https://github.com/izmeez/)
+
+
+## License
+<!--
+Mention what license this module is released under, and where people can find
+it.
+-->
+
+This project is GPL v2 software.
+See the LICENSE.txt file in this directory for complete text.
