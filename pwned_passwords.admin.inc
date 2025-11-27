@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Admin UI for pwned_passwords.
@@ -215,14 +214,12 @@ function pwned_passwords_password_threshold_examples() {
   foreach ($list as $password => $count) {
     $items[] = 'Password: "' . $password . '", count: ' . number_format($count);
   }
-  return theme_item_list(
+  return theme('item_list',
     array(
-    'items' => $items,
-    'title' => '',
-    'type' => 'ul',
-    'attributes' => array(),
-    'wrapper_attributes' => array(),
-    'empty' => 'No items to display.'
+      'items' => $items,
+      'title' => '',
+      'type' => 'ul',
+      'attributes' => array(),
     )
   );
 }
