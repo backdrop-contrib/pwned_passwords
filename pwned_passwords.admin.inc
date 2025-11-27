@@ -13,9 +13,9 @@ function pwned_passwords_admin_settings($form, &$form_state) {
   $form['#config'] = 'pwned_passwords.settings';
 
   $options = array(
-    pwned_passwords_IGNORE => t('Ignore'),
-    pwned_passwords_WARN => t('Warn'),
-    pwned_passwords_BLOCK => t('Block'),
+    PWNED_PASSWORDS_IGNORE => t('Ignore'),
+    PWNED_PASSWORDS_WARN => t('Warn'),
+    PWNED_PASSWORDS_BLOCK => t('Block'),
   );
   $hibp_api = array(
     '!hibp_api' => l(
