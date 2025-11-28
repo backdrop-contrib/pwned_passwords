@@ -124,7 +124,7 @@ function pwned_passwords_admin_settings($form, &$form_state) {
   $form['password_threshold']['pwned_passwords_password_threshold'] = array(
     '#type' => 'textfield',
     '#title' => t('Threshold'),
-    '#description' => t('Passwords with a count above this threshold will be treated as compromised.'),
+    '#description' => t('Passwords with a count above or equal to this threshold will be treated as compromised.'),
     '#default_value' => $config->get('password_threshold'),
   );
   $form['password_threshold']['examples'] = array(

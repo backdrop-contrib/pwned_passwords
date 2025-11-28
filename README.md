@@ -34,7 +34,7 @@ Drupal 7 module.
 
 There is also a configurable threshold based on the count for each pwned
 password returned by the API; higher counts indicate more commonly breached
-passwords.
+passwords. The default threshold is 1 unlike with Drupal 7 where it is 10.
 
 
 ## Requirements
