@@ -17,8 +17,8 @@ function pwned_passwords_admin_settings($form, &$form_state) {
     PWNED_PASSWORDS_WARN => t('Warn'),
     PWNED_PASSWORDS_BLOCK => t('Block'),
   );
-  $hibp_api = array(
-    '!hibp_api' => l(
+  $hibp_api_link = array(
+    '!hibp_api_link' => l(
     t('HIBP API'),
     'https://haveibeenpwned.com/API/v3#PwnedPasswords'),
   );
@@ -51,27 +51,27 @@ function pwned_passwords_admin_settings($form, &$form_state) {
     '#title' => t('Login policy'),
     '#description' => 'A compromised password is provided at login. (Default: Warn)',
     '#options' => $options,
-    '#default_value' => $config->get('pwned_passwords_login_policy'),
+    '#default_value' => $config->get('login_policy'),
   );
   $form['policy_wrapper']['pwned_passwords_check_failed_login'] = [
     '#type' => 'checkbox',
     '#title' => t('Check failed login attempts?'),
     '#description' => t('Should the password be checked when the login attempt fails? (Default: no)'),
-    '#default_value' => $config->get('pwned_passwords_check_failed_login'),
+    '#default_value' => $config->get('check_failed_login'),
   ];
   $form['policy_wrapper']['pwned_passwords_change_policy'] = array(
     '#type' => 'radios',
     '#title' => t('Password change policy'),
     '#description' => 'A compromised password is provided when the user changes their password. (Default: Block)',
     '#options' => $options,
-    '#default_value' => $config->get('pwned_passwords_change_policy'),
+    '#default_value' => $config->get('change_policy'),
   );
   $form['policy_wrapper']['pwned_passwords_register_policy'] = array(
     '#type' => 'radios',
     '#title' => t('Registration policy'),
     '#description' => 'A compromised password is provided when the user registers. (Default: Block)',
     '#options' => $options,
-    '#default_value' => $config->get('pwned_passwords_register_policy'),
+    '#default_value' => $config->get('register_policy'),
   );
 
   $messages_token_help = t('Available variables are: [pwned_passwords:hibp_link], [pwned_passwords:password_reset].');
@@ -117,7 +117,7 @@ function pwned_passwords_admin_settings($form, &$form_state) {
   $form['password_threshold'] = array(
     '#type' => 'fieldset',
     '#title' => t('Password threshold'),
-    '#description' => t('The !hibp_api responds with a count of how many times a given password appears in the HIBP database. Higher counts indicate more commonly used (/ breached) passwords.', $hibp_api),
+    '#description' => t('The !hibp_api_link responds with a count of how many times a given password appears in the HIBP database. Higher counts indicate more commonly used (/ breached) passwords.', $hibp_api_link),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
@@ -125,7 +125,7 @@ function pwned_passwords_admin_settings($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Threshold'),
     '#description' => t('Passwords with a count above this threshold will be treated as compromised.'),
-    '#default_value' => $config->get('pwned_passwords_password_threshold'),
+    '#default_value' => $config->get('password_threshold'),
   );
   $form['password_threshold']['examples'] = array(
     '#type' => 'item',
@@ -136,42 +136,74 @@ function pwned_passwords_admin_settings($form, &$form_state) {
   $form['api_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('API settings'),
-    '#description' => t('How the module interacts with the !hibp_api.', $hibp_api),
+    '#description' => t('How the module interacts with the !hibp_api_link.', $hibp_api_link),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
-  $form['api_settings']['pwned_passwords_api_url'] = array(
+  $form['api_settings']['pwned_passwords_hibp_api_url'] = array(
     '#type' => 'textfield',
     '#title' => t('HIBP API URL'),
     '#description' => t('URL the module sends API calls to.'),
-    '#default_value' => $config->get('pwned_passwords_api_url'),
+    '#default_value' => $config->get('hibp_api_url'),
   );
-  $form['api_settings']['pwned_passwords_ua'] = array(
+  $form['api_settings']['pwned_passwords_hibp_ua'] = array(
     '#type' => 'textfield',
     '#title' => t('User Agent'),
     '#description' => t('The UA the module sends to the HIBP API.'),
-    '#default_value' => $config->get('pwned_passwords_ua'),
+    '#default_value' => $config->get('hibp_ua'),
   );
-  $form['api_settings']['pwned_passwords_timeout'] = array(
+  $form['api_settings']['pwned_passwords_hibp_timeout'] = array(
     '#type' => 'textfield',
     '#title' => t('Timeout'),
     '#description' => t('The timeout setting (in seconds) for API calls.'),
-    '#default_value' => $config->get('pwned_passwords_timeout'),
+    '#default_value' => $config->get('hibp_timeout'),
   );
-  $form['api_settings']['pwned_passwords_failed_check_default'] = array(
+  $form['api_settings']['pwned_passwords_hibp_failed_check_default'] = array(
     '#type' => 'checkbox',
     '#title' => t('Assume password is bad if check fails'),
     '#description' => t('If a call to the HIBP API fails, should the module treat the password as if it is compromised? (Default: no)'),
-    '#default_value' => $config->get('pwned_passwords_failed_check_default'),
+    '#default_value' => $config->get('hibp_failed_check_default'),
   );
-  $form['api_settings']['pwned_passwords_add_padding'] = array(
+  $form['api_settings']['pwned_passwords_hibp_add_padding'] = array(
     '#type' => 'checkbox',
     '#title' => t('Ask HIBP API to Add Padding'),
     '#description' => t('See: !hibp_padding (Default: yes)', $hibp_padding),
-    '#default_value' => $config->get('pwned_passwords_add_padding'),
+    '#default_value' => $config->get('hibp_add_padding'),
   );
 
-  return system_settings_form($form);
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler for admin_settings form.
+ */
+function pwned_passwords_admin_settings_submit($form, $form_state) {
+  $values = $form_state['values'];
+  $config = config('pwned_passwords.settings');
+  $config->set('hibp_add_padding', (bool) $values['pwned_passwords_hibp_add_padding']);
+  $config->set('hibp_api_url', $values['pwned_passwords_hibp_api_url']);
+  $config->set('hibp_timeout', $values['pwned_passwords_hibp_timeout']);
+  $config->set('hibp_ua', $values['pwned_passwords_hibp_ua']);
+  $config->set('hibp_failed_check_default', (bool) $values['pwned_passwords_hibp_failed_check_default']);
+  $config->set('password_threshold', $values['pwned_passwords_password_threshold']);
+  $config->set('check_failed_login', (bool) $values['pwned_passwords_check_failed_login']);
+  $config->set('login_policy', $values['pwned_passwords_login_policy']);
+  $config->set('change_policy', $values['pwned_passwords_change_policy']);
+  $config->set('register_policy', $values['pwned_passwords_register_policy']);
+  $config->set('message_warning', $values['pwned_passwords_message_warning']);
+  $config->set('message_login_warning', $values['pwned_passwords_message_login_warning']);
+  $config->set('message_login_blocked', $values['pwned_passwords_message_login_blocked']);
+  $config->set('message_register_blocked', $values['pwned_passwords_message_register_blocked']);
+  $config->set('message_change_blocked', $values['pwned_passwords_message_change_blocked']);
+
+  $config->save();
+  backdrop_set_message(t('Pwned passwords configuration saved.'));
 }
 
 /**
