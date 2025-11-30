@@ -1,10 +1,5 @@
 # Pwned passwords
 
-
-**WARNING: The module is currently being ported and may change.**
-
-**Please test on a staging server before deploying to production.**
-
 Have I Been Pwned?
 
 Although, this module is a port of the Drupal 7 [password_haveibeenpwned](https://www.drupal.org/project/password_haveibeenpwned)
@@ -21,8 +16,7 @@ Specifically, the module uses the [HIBP Pwned Passwords V3 API](https://haveibee
 to check passwords with only the first five characters of the hash over https.
 
 This port attempts to preserve behavior from the Drupal 7 module while adapting
-hook signatures and APIs for Backdrop and uses *backdrop_http_request()* if
-available, otherwise falls back to cURL **(not currently implemented)**.
+hook signatures and APIs for Backdrop and uses *backdrop_http_request()*.
 
 The module provides configurable options for *user login*, *registration*, and
 *password change* to: block, warn, or ignore the use of compromised ("pwned")
@@ -43,6 +37,9 @@ passwords. The default threshold is 1 unlike with Drupal 7 where it is 10.
 
 
 ## Installation
+
+**Please test on a staging server before deploying to production.**
+
 - Install this module using the official Backdrop CMS instructions at
   https://docs.backdropcms.org/documentation/extend-with-modules.
 
