@@ -46,6 +46,13 @@ function pwned_passwords_admin_settings($form, &$form_state) {
     '#collapsed' => FALSE,
   );
 
+  $form['policy_wrapper']['pwned_passwords_hibp_validate_first'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Validate first with HIBP check?'),
+    '#description' => t('Combined with Block policies may reduce user information disclosure risk when HIBP check validate is first. (Default: no)'),
+    '#default_value' => $config->get('hibp_validate_first'),
+  ];
+
   $form['policy_wrapper']['pwned_passwords_login_policy'] = array(
     '#type' => 'radios',
     '#title' => t('Login policy'),
@@ -186,6 +193,7 @@ function pwned_passwords_admin_settings($form, &$form_state) {
 function pwned_passwords_admin_settings_submit($form, $form_state) {
   $values = $form_state['values'];
   $config = config('pwned_passwords.settings');
+  $config->set('hibp_validate_first', (bool) $values['pwned_passwords_hibp_validate_first']);
   $config->set('hibp_add_padding', (bool) $values['pwned_passwords_hibp_add_padding']);
   $config->set('hibp_api_url', $values['pwned_passwords_hibp_api_url']);
   $config->set('hibp_timeout', $values['pwned_passwords_hibp_timeout']);
